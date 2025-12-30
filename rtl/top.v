@@ -4,6 +4,7 @@ module top (
 /* Clocks of MIPI TX and RX parallel interfaces */
     input                       rx_pixel_clk,
     input                       tx_pixel_clk,
+    input                       tx_vga_clk,
 
 /* Signals used by the MIPI RX Interface Designer instance */
     input                       my_mipi_rx_VALID,
@@ -46,8 +47,8 @@ module top (
 );
 
 parameter RAH_PACKET_WIDTH = 48;
-parameter ACTIVE_VID_WIDTH = 1280;
-parameter ACTIVE_VID_HEIGHT = 1024;
+parameter ACTIVE_VID_WIDTH = 320;
+parameter ACTIVE_VID_HEIGHT = 240;
 parameter TOTAL_APPS = `TOTAL_APPS + 1;
 
 /* Rah Decoder definition for multiple Apps */
@@ -142,6 +143,9 @@ wire [TOTAL_APPS-1:0] wr_fifo_full;
 wire [TOTAL_APPS-1:0] wr_almost_fifo_full;
 wire [TOTAL_APPS-1:0] wr_prog_fifo_full;
 
+wire vid_gen_clk;
+assign vid_gen_clk = tx_vga_clk;
+
 wire mipi_out_rst;
 wire mipi_valid;
 wire [RAH_PACKET_WIDTH-1:0] mipi_out_data;
@@ -155,6 +159,7 @@ rah_encoder #(
     .DATA_WIDTH(RAH_PACKET_WIDTH)
 ) re (
     .clk                    (tx_pixel_clk),
+    .vid_gen_clk            (vid_gen_clk),
 
     .send_data              (write_apps_data),
     .wr_clk                 (wr_clk),
