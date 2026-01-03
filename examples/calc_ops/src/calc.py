@@ -13,8 +13,9 @@ def input_data_and_mode():
     print("2. Shift")
     print("3. Mult")
     print("4. Subb")
-    print("5. All")
-    print("6. Exit")
+    print("5. Prime Factorisation")
+    print("6. All")
+    print("7. Exit")
 
     # Get user's choice
     choice = int(input("Enter the number corresponding to the function (1-6): "))
@@ -22,7 +23,7 @@ def input_data_and_mode():
     # Ensure the user enters a valid choice
     if choice not in [1, 2, 3, 4, 5, 6]:
         print("Invalid choice. Please select a number between 1 and 6")
-    elif choice == 6:
+    elif choice == 7:
         exit()
     else:
         # Ask for the angle in degrees for choices 1 and 2
@@ -59,21 +60,25 @@ def int_to_hex(input_value):
 
 def transfer_data(data_in,appid):
 
-    if appid not in [1, 2, 3, 4]:
+    if appid not in [1, 2, 3, 4, 5, 6]:
         pyrah.rah_write(1,data_in)
         pyrah.rah_write(2,data_in)
         pyrah.rah_write(3,data_in)
         pyrah.rah_write(4,data_in)
+        pyrah.rah_write(5,data_in)
+        pyrah.rah_write(6,data_in)
     else :
         pyrah.rah_write(appid,data_in)
 
 def receive_data():
     while True:
         choice = input_data_and_mode()
-        if choice == 5:
+        if choice == 6:
             adder_data = pyrah.rah_read(1, 6)
             shift_data = pyrah.rah_read(2, 6)
             mult_data = pyrah.rah_read(3, 12)
+            mult_data = pyrah.rah_read(4, 12)
+            mult_data = pyrah.rah_read(5, 12)
 
 
             adder_value = int.from_bytes(adder_data, byteorder='big')
@@ -97,6 +102,8 @@ def receive_data():
                 print("output for add is:", decimal_value)
             elif choice == 4:
                 print("output for subb is:", decimal_value)
+            elif choice == 5:
+                print("output for prime factorisation is:", decimal_value)
 
 
 if __name__ == "__main__":

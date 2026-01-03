@@ -254,6 +254,21 @@ subtractor #(
     .wren           (write_apps_data[`SUBB])
 );
 
+assign rd_clk[`PRIME] = calc_clk;
+assign wr_clk[`PRIME] = calc_clk;
+
+prime_factor #(
+    .RAH_PACKET_WIDTH(RAH_PACKET_WIDTH)
+) prime (
+    .clk    (calc_clk),
+    .a      (`GET_DATA_RAH(`PRIME)),
+    .empty  (data_queue_empty[`PRIME]),
+
+    .c      (`SET_DATA_RAH(`PRIME)),
+    .rden   (request_data[`PRIME]),
+    .wren   (write_apps_data[`PRIME])
+);
+
 
 assign my_mipi_tx_DPHY_RSTN = ~mipi_out_rst;
 assign my_mipi_tx_RSTN = ~mipi_out_rst;
