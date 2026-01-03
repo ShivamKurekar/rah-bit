@@ -17,7 +17,7 @@ def input_data_and_mode():
     print("6. Exit")
 
     # Get user's choice
-    choice = int(input("Enter the number corresponding to the function (1-4): "))
+    choice = int(input("Enter the number corresponding to the function (1-6): "))
 
     # Ensure the user enters a valid choice
     if choice not in [1, 2, 3, 4, 5, 6]:
