@@ -21,7 +21,7 @@ def input_data_and_mode():
     choice = int(input("Enter the number corresponding to the function (1-6): "))
 
     # Ensure the user enters a valid choice
-    if choice not in [1, 2, 3, 4, 5, 6]:
+    if choice not in [1, 2, 3, 4, 5, 6, 7]:
         print("Invalid choice. Please select a number between 1 and 6")
     elif choice == 7:
         exit()
@@ -95,7 +95,7 @@ def receive_data():
             print("output for multiplier is:",mult_value)
         else:
             received_data = pyrah.rah_read(choice,6)
-            decimal_value = int.from_bytes(received_data, byteorder='big')
+            decimal_value = int.from_bytes(received_data, byteorder='big', signed=True))
             if choice == 2:
                 print("output for shift is:",decimal_value)
             elif choice == 1:
