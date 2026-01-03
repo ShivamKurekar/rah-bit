@@ -7,6 +7,8 @@ This project demonstrates the use of the RAH interface to communicate with the F
 1. **Addition**
 2. **Shift**
 3. **Multiplication**
+4. **Subtraction**
+5. **Prime factorization**
 
 The CPU passes the data to the FPGA in the form of a 6-byte packet. The FPGA processes the data and sends the result back to the CPU. The CPU then displays the result on the console.
 
@@ -26,13 +28,15 @@ The definition should be same as defined on the CPU side.
 
 ```verilog
 // rah_var_defs.vh
-`define TOTAL_APPS 3
+`define TOTAL_APPS 5
 
 `define ADD 1
 `define SHIFT 2
 `define MUL 3
+`define SUBB 4
+`define PRIME 5
 
-`define VERSION "1.2.0"
+`define VERSION "1.3.0"
 
 `define GET_DATA_RAH(a) rd_data[a * RAH_PACKET_WIDTH +: RAH_PACKET_WIDTH]
 `define SET_DATA_RAH(a) wr_data[a * RAH_PACKET_WIDTH +: RAH_PACKET_WIDTH]
@@ -52,10 +56,12 @@ module top (
 
 .........
 
-/* Accesssing data from APP_WR_FIFO */
+/* Accessing data from APP_WR_FIFO */
 
+wire calc_clk = rx_pixel_clk;
 assign rd_clk[`ADD] = calc_clk;
 assign wr_clk[`ADD] = calc_clk;
+
 
 adder #(
     .RAH_PACKET_WIDTH(RAH_PACKET_WIDTH)
@@ -99,6 +105,35 @@ mul #(
     .wren           (write_apps_data[`MUL])
 );
 
+assign rd_clk[`SUBB] = calc_clk;
+assign wr_clk[`SUBB] = calc_clk;
+
+subtractor #(
+    .RAH_PACKET_WIDTH(RAH_PACKET_WIDTH)
+) subb (
+    .clk            (calc_clk),
+    .a              (`GET_DATA_RAH(`SUBB)),
+    .empty          (data_queue_empty[`SUBB]),
+
+    .c              (`SET_DATA_RAH(`SUBB)),
+    .rden           (request_data[`SUBB]),
+    .wren           (write_apps_data[`SUBB])
+);
+
+assign rd_clk[`PRIME] = calc_clk;
+assign wr_clk[`PRIME] = calc_clk;
+
+prime_factor #(
+    .RAH_PACKET_WIDTH(RAH_PACKET_WIDTH)
+) prime (
+    .clk    (calc_clk),
+    .a      (`GET_DATA_RAH(`PRIME)),
+    .empty  (data_queue_empty[`PRIME]),
+
+    .c      (`SET_DATA_RAH(`PRIME)),
+    .rden   (request_data[`PRIME]),
+    .wren   (write_apps_data[`PRIME])
+);
 .....
 
 endmodule
@@ -110,7 +145,7 @@ endmodule
 
 ### On CPU
 
-This Python script is designed to perform mathematical operations (addition, shifting, and multiplication) on user-provided input. It allows the user to select a mode for calculation, input two numbers, and sends the result to the appropriate destination. Data is then transferred and displayed based on the selected mode.
+This Python script is designed to perform mathematical operations (addition, shifting, multiplication, subtraction & prime factorization) on user-provided input. It allows the user to select a mode for calculation, input two numbers, and sends the result to the appropriate destination. Data is then transferred and displayed based on the selected mode.
 
 The script uses multithreading to concurrently handle user input and data reception processes.
 
@@ -139,6 +174,7 @@ sudo python3 calc.py
 This will start the program and display the main menu for selecting the operation mode.
 
 **How to Use**
+
 **1. Select an Operation Mode**
 
 Upon starting the program, you will see the following options:
@@ -148,8 +184,10 @@ Select the mode:
 1. Add
 2. Shift
 3. Mult
-4. All
-5. Exit
+4. Subb
+5. Prime Factorization
+6. All
+7. Exit
 ```
 - **Option 1: Add**  
   Perform addition on two input numbers. The program will take two input numbers and calculate their sum.
@@ -160,10 +198,16 @@ Select the mode:
 - **Option 3: Mult**  
   Perform multiplication on two input numbers. The program will multiply the two input numbers and return the result.
 
-- **Option 4: All**  
+- **Option 4: Subb**  
+  Perform subtraction on two input numbers. The program will subtract the two input numbers and return the result.
+
+- **Option 5: Prime Factorization**  
+  Perform prime factorization on one input number. The program will find the prime factors of the input number and return the result.
+
+- **Option 6: All**  
   Execute all operations (Add, Shift, Multiply) at once. The program will perform the addition, bitwise shift, and multiplication operations in sequence and return the results for all.
 
-- **Option 5: Exit**  
+- **Option 7: Exit**  
   Exit the program. Select this option to quit the program when you're done.
 
 > [!NOTE]  
@@ -176,6 +220,7 @@ After selecting a mode (e.g., Add or Shift), the program will prompt you to ente
 Enter the first input for calculations:
 Enter the second input for calculations:
 ```
+
 ### 3. Results
 
 Once the data is processed, the program will display the result in decimal format. For example:
@@ -183,7 +228,9 @@ Once the data is processed, the program will display the result in decimal forma
 - Add: The result of the addition will be displayed.
 - Shift: The result of the bit-shifting operation will be displayed.
 - Mult: The result of the multiplication will be shown.
-- All: The results for all operations (Add, Shift, Multiply) will be displayed together.
+- Subb: The result of the subtraction will be shown.
+- Prime Factorization: The result of the prime factorization will be shown.
+- All: The results for all operations (All functions) will be displayed together.
 
 Example:
 
@@ -193,4 +240,4 @@ Output for add is: 15
 ```
 **4. Repeat or Exit**
 
-After the operation is complete, the program will return to the main menu, allowing you to choose another operation or exit the program by selecting Exit (5).
+After the operation is complete, the program will return to the main menu, allowing you to choose another operation or exit the program by selecting Exit (7).

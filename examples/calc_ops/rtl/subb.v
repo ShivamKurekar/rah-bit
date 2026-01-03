@@ -1,9 +1,9 @@
-module adder (
+module subtractor (
     input                               clk,
-    input [RAH_PACKET_WIDTH-1:0]        a,
+    input signed [RAH_PACKET_WIDTH-1:0] a,
     input                               empty,
 
-    output reg [RAH_PACKET_WIDTH-1:0]   c = 0,
+    output reg signed [RAH_PACKET_WIDTH-1:0] c = 0,
     output reg                          rden = 0,
     output reg                          wren = 0
 );
@@ -13,10 +13,10 @@ parameter RAH_PACKET_WIDTH = 48;
 localparam IDLE = 2'd0;
 localparam NEXT = 2'd1;
 localparam LB = 2'd2;
-localparam ADD = 2'd3;
+localparam SUBB = 2'd3;
 
-reg [RAH_PACKET_WIDTH-1:0] da = 0;
-reg [RAH_PACKET_WIDTH-1:0] db = 0;
+reg signed [RAH_PACKET_WIDTH-1:0] da = 0;
+reg signed [RAH_PACKET_WIDTH-1:0] db = 0;
 reg r_wait = 0;
 reg [1:0] state = IDLE;
 
@@ -46,11 +46,11 @@ always @(posedge clk) begin
         LB: begin
             db <= a;
             rden <= 0;
-            state <= ADD;
+            state <= SUBB;
         end
 
-        ADD: begin
-            c <= da + db;
+        SUBB: begin
+            c <= da - db;
             wren <= 1;
             state <= IDLE;
         end
