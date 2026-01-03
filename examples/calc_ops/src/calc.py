@@ -95,7 +95,7 @@ def receive_data():
             print("output for multiplier is:",mult_value)
         else:
             received_data = pyrah.rah_read(choice,6)
-            decimal_value = int.from_bytes(received_data, byteorder='big', signed=True))
+            decimal_value = int.from_bytes(received_data, byteorder='big', signed=True)
             if choice == 2:
                 print("output for shift is:",decimal_value)
             elif choice == 1:
