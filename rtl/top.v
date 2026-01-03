@@ -121,9 +121,9 @@ rah_version_check #(
 );
 
 /* Periplex instantiation for multiplexing peripherals */
-assign rd_clk[`EXAMPLE] = rx_pixel_clk; 
+// assign rd_clk[`EXAMPLE] = rx_pixel_clk; 
 
-/* change this module as your app */
+/* change this module as your app 
 example_recv #(
     .RAH_PACKET_WIDTH(RAH_PACKET_WIDTH)
 ) er (
@@ -134,6 +134,8 @@ example_recv #(
     .data_frame(`GET_DATA_RAH(`EXAMPLE)),
     .uart_tx_pin(uart_tx_pin)
 );
+
+*/
 
 /* Send data to processor */
 wire [TOTAL_APPS-1:0] wr_clk;
@@ -176,9 +178,9 @@ rah_encoder #(
     .vsync_patgen           (vsync)
 );
 
-assign wr_clk[`EXAMPLE] = tx_pixel_clk;
+// assign wr_clk[`EXAMPLE] = tx_pixel_clk;
 
-/* Include your module */
+/* Include your module 
 example_trans #(
     .RAH_PACKET_WIDTH(RAH_PACKET_WIDTH)
 ) et (
@@ -187,6 +189,56 @@ example_trans #(
     .data           (`SET_DATA_RAH(`EXAMPLE)),
     .send_data      (write_apps_data[`EXAMPLE])
 );
+*/
+
+/* Accesssing data from APP_WR_FIFO */
+
+wire calc_clk = rx_pixel_clk;
+assign rd_clk[`ADD] = calc_clk;
+assign wr_clk[`ADD] = calc_clk;
+
+adder #(
+    .RAH_PACKET_WIDTH(RAH_PACKET_WIDTH)
+) adder (
+    .clk            (calc_clk),
+    .a              (`GET_DATA_RAH(`ADD)),
+    .empty          (data_queue_empty[`ADD]),
+
+    .c              (`SET_DATA_RAH(`ADD)),
+    .rden           (request_data[`ADD]),
+    .wren           (write_apps_data[`ADD])
+);
+
+assign rd_clk[`SHIFT] = calc_clk;
+assign wr_clk[`SHIFT] = calc_clk;
+
+shift #(
+    .RAH_PACKET_WIDTH(RAH_PACKET_WIDTH)
+) shift (
+    .clk            (calc_clk),
+    .a              (`GET_DATA_RAH(`SHIFT)),
+    .empty          (data_queue_empty[`SHIFT]),
+
+    .c              (`SET_DATA_RAH(`SHIFT)),
+    .rden           (request_data[`SHIFT]),
+    .wren           (write_apps_data[`SHIFT])
+);
+
+assign rd_clk[`MUL] = calc_clk;
+assign wr_clk[`MUL] = calc_clk;
+
+mul #(
+    .RAH_PACKET_WIDTH(RAH_PACKET_WIDTH)
+) mul (
+    .clk            (calc_clk),
+    .a              (`GET_DATA_RAH(`MUL)),
+    .empty          (data_queue_empty[`MUL]),
+
+    .c              (`SET_DATA_RAH(`MUL)),
+    .rden           (request_data[`MUL]),
+    .wren           (write_apps_data[`MUL])
+);
+
 
 assign my_mipi_tx_DPHY_RSTN = ~mipi_out_rst;
 assign my_mipi_tx_RSTN = ~mipi_out_rst;
