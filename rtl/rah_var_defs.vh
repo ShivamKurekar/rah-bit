@@ -1,8 +1,9 @@
-`define TOTAL_APPS 3
+`define TOTAL_APPS 4
 
 `define ADD 1
 `define SHIFT 2
 `define MUL 3
+`define SUBB 4
 
 `define VERSION "1.3.0"
 

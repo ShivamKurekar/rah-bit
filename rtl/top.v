@@ -239,6 +239,21 @@ mul #(
     .wren           (write_apps_data[`MUL])
 );
 
+assign rd_clk[`SUBB] = calc_clk;
+assign wr_clk[`SUBB] = calc_clk;
+
+subtractor #(
+    .RAH_PACKET_WIDTH(RAH_PACKET_WIDTH)
+) subb (
+    .clk            (calc_clk),
+    .a              (`GET_DATA_RAH(`SUBB)),
+    .empty          (data_queue_empty[`SUBB]),
+
+    .c              (`SET_DATA_RAH(`SUBB)),
+    .rden           (request_data[`SUBB]),
+    .wren           (write_apps_data[`SUBB])
+);
+
 
 assign my_mipi_tx_DPHY_RSTN = ~mipi_out_rst;
 assign my_mipi_tx_RSTN = ~mipi_out_rst;
