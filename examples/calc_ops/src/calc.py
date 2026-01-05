@@ -77,8 +77,8 @@ def receive_data():
             adder_data = pyrah.rah_read(1, 6)
             shift_data = pyrah.rah_read(2, 6)
             mult_data = pyrah.rah_read(3, 12)
-            mult_data = pyrah.rah_read(4, 12)
-            mult_data = pyrah.rah_read(5, 12)
+            # mult_data = pyrah.rah_read(4, 6)
+            # mult_data = pyrah.rah_read(5, )
 
 
             adder_value = int.from_bytes(adder_data, byteorder='big')
@@ -93,6 +93,10 @@ def receive_data():
             mult_data = pyrah.rah_read(choice,12)
             mult_value = int.from_bytes(mult_data, byteorder='big')
             print("output for multiplier is:",mult_value)
+        elif choice == 5:
+            
+
+
         else:
             received_data = pyrah.rah_read(choice,6)
             decimal_value = int.from_bytes(received_data, byteorder='big', signed=True)
@@ -102,8 +106,8 @@ def receive_data():
                 print("output for add is:", decimal_value)
             elif choice == 4:
                 print("output for subb is:", decimal_value)
-            elif choice == 5:
-                print("output for prime factorisation is:", decimal_value)
+            # elif choice == 5:
+                # print("output for prime factorisation is:", decimal_value)
 
 
 if __name__ == "__main__":

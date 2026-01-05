@@ -78,9 +78,8 @@ always @(posedge clk) begin
         end
 
         WRITE: begin
-            c <= prime_stack[ptr];
-
             if(ptr > 0) begin
+                c <= prime_stack[ptr - 1];
                 ptr <= ptr - 1;
                 wren <= 1;
                 state <= WRITE;
