@@ -94,7 +94,7 @@ def receive_data():
             mult_value = int.from_bytes(mult_data, byteorder='big')
             print("output for multiplier is:",mult_value)
         elif choice == 5:
-            print("output for multiplier is:")
+            print("output for Prime Factorisation is:")
             for i in range(4):
                 prime_data = pyrah.rah_read(choice,12)
                 prime_value = int.from_bytes(prime_data, byteorder='big')
