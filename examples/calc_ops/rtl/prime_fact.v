@@ -33,6 +33,8 @@ always @(posedge clk) begin
             rden <= 0;
             i <= 3;
             qcnt <= 0;
+            rem <= 0;
+            numb <= 0;
             if (~empty) begin
                rden <= 1;
                state <= LOAD;
@@ -58,8 +60,13 @@ always @(posedge clk) begin
                 state <= DIV_2;
             end
             else begin
-                rem <= numb;
-                state <= DIV_I;
+                if (numb == 1) begin
+                    state <= WRITE;
+                end
+                else begin
+                    rem <= numb;
+                    state <= DIV_I;
+                end
             end
         end
 
@@ -86,8 +93,10 @@ always @(posedge clk) begin
                         state <= DIV_I;
                     // state <= DIV_2;
                 end
-                else
+                else begin
+                    rem <= numb;
                     i <= i + 2;
+                end
             end
             else begin
                 rem <= rem - i;
