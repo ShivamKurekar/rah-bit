@@ -11,8 +11,8 @@ module adder (
 parameter RAH_PACKET_WIDTH = 48;
 
 localparam IDLE = 2'd0;
-localparam LOAD_a = 2'd1;
-localparam LOAD_b = 2'd2;
+localparam NEXT = 2'd1;
+localparam LB = 2'd2;
 localparam ADD = 2'd3;
 
 reg [RAH_PACKET_WIDTH-1:0] da = 0;
@@ -25,36 +25,28 @@ always @(posedge clk) begin
         IDLE:begin
             wren <= 0;
 
-            if (!empty) begin
+            if (~empty) begin
                rden <= 1;
-               state <= LOAD_a;
+               state <= NEXT;
             end else begin
                rden <= 0;
             end
         end
 
-        LOAD_a: begin
+        NEXT: begin
             if (r_wait) begin
-                if (!empty) begin
-                    da <= a;
-                    state <= LOAD_b;
-                    r_wait <= 0;
-                end
-                else begin
-                end
+                da <= a;
+                state <= LB;
+                r_wait <= 0;
             end else begin
                 r_wait <= ~r_wait;
             end
         end
 
-        LOAD_b: begin
-            if(!empty) begin
+        LB: begin
             db <= a;
             rden <= 0;
             state <= ADD;
-            end
-            else
-            state <= LOAD_b;
         end
 
         ADD: begin

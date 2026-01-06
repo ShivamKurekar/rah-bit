@@ -17,6 +17,8 @@ localparam DIV_I = 3'd3;
 localparam WRITE = 3'd4;
 
 reg [RAH_PACKET_WIDTH-1:0] numb = 0;
+reg [RAH_PACKET_WIDTH-1:0] rem = 0;
+reg [RAH_PACKET_WIDTH-1:0] qcnt = 0;
 reg r_wait = 0;
 reg [RAH_PACKET_WIDTH-1:0] i = 3;
 reg [2:0] state = IDLE;
@@ -30,6 +32,7 @@ always @(posedge clk) begin
             wren <= 0;
             rden <= 0;
             i <= 3;
+            qcnt <= 0;
             if (~empty) begin
                rden <= 1;
                state <= LOAD;
@@ -48,18 +51,51 @@ always @(posedge clk) begin
         end
 
         DIV_2: begin
-            if( numb % 2 == 0) begin
+            if(!numb[0]) begin
                 numb <= numb >> 1;
                 ptr <= ptr + 1;
                 prime_stack[ptr] <= 2;
                 state <= DIV_2;
             end
-            else
+            else begin
+                rem <= numb;
                 state <= DIV_I;
+            end
         end
 
         DIV_I: begin
-            if (i * i <= numb) begin
+            // if (i == numb / i)begin
+            //     qcnt <= 0;
+            //     rem <= 0;
+            //     numb <= 1;
+            //     ptr <= ptr + 2;
+            //     prime_stack[ptr] <= i;
+            //     prime_stack[ptr + 1] <= 1;
+            // end
+            // else 
+            if (rem < i) begin
+                qcnt <= 0;
+                if(rem == 0) begin
+                    numb <= qcnt;
+                    rem <= qcnt;
+                    ptr <= ptr + 1;
+                    prime_stack[ptr] <= i;
+                    if(qcnt == 1)
+                        state <= WRITE;
+                    else
+                        state <= DIV_I;
+                    // state <= DIV_2;
+                end
+                else
+                    i <= i + 2;
+            end
+            else begin
+                rem <= rem - i;
+                qcnt <= qcnt + 1;
+            end
+
+            /*
+            if (i <= numb / i) begin
                 if (numb % i == 0) begin
                     numb <= numb / i;
                     ptr <= ptr + 1;
@@ -68,13 +104,14 @@ always @(posedge clk) begin
                 else begin
                     i <= i + 2;
                 end
-                state <= DIV_I;
+                // state <= DIV_I;
             end
             else begin
                 ptr <= ptr + 1;
                 prime_stack[ptr] <= numb;
                 state <= WRITE;
             end
+            */
         end
 
         WRITE: begin
