@@ -198,7 +198,7 @@ wire calc_clk = rx_pixel_clk;
 assign rd_clk[`ADD] = calc_clk;
 assign wr_clk[`ADD] = calc_clk;
 
-/*
+// /*
 adder #(
     .RAH_PACKET_WIDTH(RAH_PACKET_WIDTH)
 ) adder (
@@ -256,7 +256,7 @@ subtractor #(
     .wren           (write_apps_data[`SUBB])
 );
 
-*/
+// */
 assign rd_clk[`PRIME] = calc_clk;
 assign wr_clk[`PRIME] = calc_clk;
 
