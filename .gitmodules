@@ -1,3 +1,0 @@
-[submodule "examples/calc_ops"]
-	path = examples/calc_ops
-	url = git@github.com:ShivamKurekar/calc_ops.git
