@@ -8,7 +8,7 @@ This project demonstrates the use of the RAH interface to communicate with the F
 2. **Shift**
 3. **Multiplication**
 3. **Substraction**
-3. **Prime factorisation**
+3. **Prime factorization**
 
 The CPU passes the data to the FPGA in the form of a 6-byte packet. The FPGA processes the data and sends the result back to the CPU. The CPU then displays the result on the console.
 
@@ -143,7 +143,7 @@ endmodule
 
 ### On CPU
 
-This Python script is designed to perform mathematical operations (addition, shifting, multiplication, substraction & prime factorisation) on user-provided input. It allows the user to select a mode for calculation, input two numbers, and sends the result to the appropriate destination. Data is then transferred and displayed based on the selected mode.
+This Python script is designed to perform mathematical operations (addition, shifting, multiplication, substraction & prime factorization) on user-provided input. It allows the user to select a mode for calculation, input two numbers, and sends the result to the appropriate destination. Data is then transferred and displayed based on the selected mode.
 
 The script uses multithreading to concurrently handle user input and data reception processes.
 
@@ -181,6 +181,8 @@ Select the mode:
 1. Add
 2. Shift
 3. Mult
+4. Subb
+5. Prime Factorization
 4. All
 5. Exit
 ```
@@ -197,7 +199,7 @@ Select the mode:
   Perform substraction on two input numbers. The program will subtract the two input numbers and return the result.
 
 - **Option 5: Mult**  
-  Perform prime factorisation on one input numbers. The program will find the prime factors of the input number and return the result.
+  Perform prime factorization on one input numbers. The program will find the prime factors of the input number and return the result.
 
 - **Option 6: All**  
   Execute all operations (Add, Shift, Multiply) at once. The program will perform the addition, bitwise shift, and multiplication operations in sequence and return the results for all.
@@ -224,7 +226,7 @@ Once the data is processed, the program will display the result in decimal forma
 - Shift: The result of the bit-shifting operation will be displayed.
 - Mult: The result of the multiplication will be shown.
 - Subb: The result of the substraction will be shown.
-- Prime Fact.: The result of the prime factorisation will be shown.
+- Prime Fact.: The result of the prime factorization will be shown.
 - All: The results for all operations (All functions) will be displayed together.
 
 Example:
