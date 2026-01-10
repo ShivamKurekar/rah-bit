@@ -58,8 +58,10 @@ module top (
 
 /* Accesssing data from APP_WR_FIFO */
 
+wire calc_clk = rx_pixel_clk;
 assign rd_clk[`ADD] = calc_clk;
 assign wr_clk[`ADD] = calc_clk;
+
 
 adder #(
     .RAH_PACKET_WIDTH(RAH_PACKET_WIDTH)
