@@ -28,6 +28,7 @@ always @(posedge clk) begin
         IDLE: begin
             wren <= 0;
             rden <= 0;
+            i <= 2;
 
             if (~empty) begin
                rden <= 1;

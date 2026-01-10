@@ -72,15 +72,7 @@ always @(posedge clk) begin
         end
 
         DIV_I: begin
-            // if (i == numb / i)begin
-            //     qcnt <= 0;
-            //     rem <= 0;
-            //     numb <= 1;
-            //     ptr <= ptr + 2;
-            //     prime_stack[ptr] <= i;
-            //     prime_stack[ptr + 1] <= 1;
-            // end
-            // else 
+
             if (rem < i) begin
                 qcnt <= 0;
                 if(rem == 0) begin
@@ -104,29 +96,11 @@ always @(posedge clk) begin
                 qcnt <= qcnt + 1;
             end
 
-            /*
-            if (i <= numb / i) begin
-                if (numb % i == 0) begin
-                    numb <= numb / i;
-                    ptr <= ptr + 1;
-                    prime_stack[ptr] <= i;
-                end
-                else begin
-                    i <= i + 2;
-                end
-                // state <= DIV_I;
-            end
-            else begin
-                ptr <= ptr + 1;
-                prime_stack[ptr] <= numb;
-                state <= WRITE;
-            end
-            */
         end
 
         DATA_LENGTH: begin
             wren <= 1;
-            c <= ptr;
+            c <= ptr; // This sends the length/ total number of factors to be sent
             state <= WRITE;
         end
 
